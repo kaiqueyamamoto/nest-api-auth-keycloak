@@ -8,17 +8,21 @@ import {
   RoleGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { LoginModule } from './login/login.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     KeycloakConnectModule.register({
-      authServerUrl: 'http://localhost:8080', // might be http://localhost:8080/auth for older keycloak versions
-      realm: 'myrealm',
-      clientId: 'backend',
-      secret: '1hxZ95sLf9SbmVicOlIT9WtSFPHHufb4',
+      authServerUrl: process.env.KEYCLOAK_BASE_URL, // might be http://localhost:8080/auth for older keycloak versions
+      realm: process.env.KEYCLOAK_REALM,
+      clientId: process.env.KEYCLOAK_CLIENT_ID,
+      secret: process.env.KEYCLOAK_CLIENT_SECRET,
       // policyEnforcement: PolicyEnforcementMode.PERMISSIVE, // optional
       // tokenValidation: TokenValidation.ONLINE, // optional
     }),
+    LoginModule,
   ],
   controllers: [AppController],
   providers: [
