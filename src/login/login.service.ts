@@ -5,11 +5,22 @@ import KcAdminClient from '@keycloak/keycloak-admin-client';
 
 @Injectable()
 export class LoginService {
+  /**
+   * https://www.npmjs.com/package/@keycloak/keycloak-admin-client
+   */
   private adminClientKc = new KcAdminClient({
-    baseUrl: 
+    baseUrl: process.env.KEYCLOAK_BASE_URL,
+    realmName: process.env.KEYCLOAK_REALM,
+    
   })
 
-  create(createLoginDto: CreateLoginDto) {
+  async create(createLoginDto: CreateLoginDto) {
+    await this.adminClientKc.auth({
+      username: process.env.KC_USER,
+      password: process.env.KC_PASS,
+      grantType: 'password',
+      clientId: process.env.KEYCLOAK_CLIENT,
+    });
     return 'This action adds a new login';
   }
 
